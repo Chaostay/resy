@@ -8,13 +8,21 @@ namespace {
 size_t station_pos(std::vector<std::string> const& route,
                    std::string const& station) {
   // TODO
-  return 0;
+  for (int i=0; i< route.size(); i++){
+      if (station == route[i]){
+          return i;
+      }
+  }
+  return route.size();
 }
 
 /// Prüft, ob eine Station in einer Route gültig ist.
 bool station_valid_for_route(std::vector<std::string> const& route,
                              std::string const& station) {
   // TODO
+  if (station_pos(route, station)!=route.size()){
+      return true;
+  }
   return false;
 }
 
@@ -22,20 +30,43 @@ bool station_valid_for_route(std::vector<std::string> const& route,
 
 namespace resy {
 
+    /// Erwartet eine Route und prüft, ob alle Reservierungen dafür gültig sind.
 bool Seat::reservations_valid_for_route(
     std::vector<std::string> const& route) const {
   // TODO
-  return false;
+ for (int i=0; i<reservations.size(); i++){
+      if (!reservations[i].is_valid_for_route(route)){
+          return false;
+      }
+  }
+  return true;
 }
 
+/// Erwartet eine Route und prüft, ob die Reservierungen sich überschneiden.
 bool Seat::reservations_overlap_for_route(
     std::vector<std::string> const& route) const {
   // TODO
-  return false;
+  for ( int i=0; i< reservations.size(); i++){
+      for (int n=1; n < reservations.size(); n++){
+          if (reservations_valid_for_route(route)){
+              if (reservations[i].destination_pos(route) <= reservations[n].origin_pos(route)){
+                  return false;
+              }
+              if (reservations[n].destination_pos(route) <= reservations[i].origin_pos(route)){
+                  return false;
+              }
+          }
+      }
+  }
+  return true;
 }
 
+/// Erwartet eine Route und prüft, ob die Reservierungsliste gültig ist
 bool Seat::seat_valid(std::vector<std::string> const& route) const {
   // TODO
+  if (reservations_valid_for_route(route) && !(reservations_overlap_for_route(route))){
+      return true;
+  }
   return false;
 }
 

@@ -4,20 +4,42 @@
 
 namespace resy {
 
+/// Erwartet eine Liste von Stationsnamen und liefert die Position der
+/// Abfahrtsstation in der Route. Falls die Station nicht enthalten ist, wird
+/// die Größe der Route geliefert.
 size_t Reservation::origin_pos(std::vector<std::string> const& route) const {
   // TODO
-  return 0;
+  for (int i =0; i< route.size(); i++){
+      if (origin == route[i]){
+          return i;
+      }
+  }
+  return route.size();
 }
 
+/// Erwartet eine Liste von Stationsnamen und liefert die Position der
+/// Zielstation in der Route. Falls die Station nicht enthalten ist, wird die
+/// Größe der Route geliefert.
 size_t Reservation::destination_pos(
     std::vector<std::string> const& route) const {
   // TODO
-  return 0;
+  for ( int i=0; i< route.size(); i++){
+      if( destination == route[i]){
+          return i;
+      }
+  }
+  return route.size();
 }
 
+/// Erwartet eine Liste von Stationsnamen und prüft, ob die Reservierung für
+/// diese Route gültig ist. Eine Reservierung ist gültig, wenn die Route die
+/// Haltestellen aus der Reservierung in der richtigen Reihenfolge enthält.
 bool Reservation::is_valid_for_route(
     std::vector<std::string> const& route) const {
   // TODO
+  if(destination_pos(route)> origin_pos(route) && destination_pos(route)!=route.size()){
+      return true;
+  }
   return false;
 }
 
